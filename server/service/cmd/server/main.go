@@ -21,7 +21,7 @@ func main() {
 	app := fiber.New()
 	dbConn,err := db.InitDB()
 
-
+	db.MigrateDB(dbConn)
 	if err!=nil {
 		fmt.Println(err)
 	}
