@@ -10,9 +10,6 @@ import (
 
 func InitDB() (*gorm.DB,error){
 	dsn := "host=localhost user=postgres password=readit dbname=postgres port=5432 sslmode=disable TimeZone=Asia/Kolkata"
-
-
-
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
 	if err != nil {
 		log.Fatal("Coudn't run postgres")
