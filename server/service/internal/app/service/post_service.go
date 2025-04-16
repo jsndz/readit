@@ -1,3 +1,18 @@
-package db
+package service
 
-// Add valid import paths here
+import (
+	"github.com/readit/internal/app/repository"
+	"gorm.io/gorm"
+)
+
+
+type PostService struct {
+	postRepo   *repository.PostRepository
+}
+
+
+func NewPostService (db *gorm.DB) * PostService {
+	return &PostService{
+		postRepo: repository.NewPostRepository(db),
+	}
+}

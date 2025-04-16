@@ -1,13 +1,17 @@
 package model
 
-
 type Comment struct {
-	ID      uint   `gorm:"primaryKey"`
-	Content string `gorm:"type:text"`
+	ID        uint   `gorm:"primaryKey"`
+	Content   string `gorm:"type:text"`
 
-	UserID  uint
-	User    User    `gorm:"foreignKey:UserID"`
+	Likes     uint
+	Dislikes  uint
 
-	PostID  uint
-	Post    Post    `gorm:"foreignKey:PostID"`
+	UserID    uint
+	PostID    uint
+
+	ParentID  *uint       
+	Children  []Comment   `gorm:"foreignKey:ParentID"` 
+
+	Post      Post        `gorm:"foreignKey:PostID"`
 }

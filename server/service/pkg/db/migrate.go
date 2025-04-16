@@ -10,12 +10,8 @@ import (
 func MigrateDB(db *gorm.DB){
 
 	err:= db.AutoMigrate(
-		&model.Category{},
 		&model.Comment{},
-		&model.Heart{},
 		&model.Post{},
-		&model.Tag{},
-		&model.User{},
 
 	)
 
