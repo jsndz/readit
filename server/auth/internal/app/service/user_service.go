@@ -1,6 +1,8 @@
 package service
 
 import (
+	"fmt"
+
 	"github.com/jsndz/readit/auth/internal/app/model"
 	"github.com/jsndz/readit/auth/internal/app/repository"
 	"github.com/jsndz/readit/auth/pkg/utils"
@@ -35,12 +37,15 @@ func (s *UserService) Signin(Email string,Password string)(string,error){
 	var user *model.User
 	user, err := s.userRepo.Get(Email)
 	if  err != nil {
-		return "",err
+		return "", fmt.Errorf("user doesn't exist")
 	}
-	if !model.CheckPassword(Password,user.Password) {
-		return "",err
+
+	if !model.CheckPassword(user.Password,Password) {
+		return "", fmt.Errorf("invalid credentials")
 	}
+
 	jwt_token, err := utils.GenerateJWT(Email)
+
 	if  err != nil {
 		return "",err
 	}

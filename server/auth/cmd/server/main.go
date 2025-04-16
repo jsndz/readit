@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/jsndz/readit/auth/pkg/db"
+	"github.com/jsndz/readit/auth/route"
 )
 
 func getEnv(key, fallback string) string {
@@ -28,7 +29,10 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
-	port := getEnv("PORT","3000")
+
+	authGroup := app.Group("/api/auth")
+	route.SetUpRoute(authGroup, dbConn)
+	port := getEnv("PORT","3001")
 	fmt.Println("Connected:", dbConn)
 	fmt.Println("Server running on port:", port)
 	if err := app.Listen(":" + port); err != nil {
