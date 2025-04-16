@@ -7,11 +7,13 @@ type Comment struct {
 	Likes     uint
 	Dislikes  uint
 
-	UserID    uint
-	PostID    uint
+	UserID    uint `gorm:"not null"`
+	PostID    uint `gorm:"not null"`
 
-	ParentID  *uint       
-	Children  []Comment   `gorm:"foreignKey:ParentID"` 
+	ParentID  *uint
+	Children  []Comment `gorm:"foreignKey:ParentID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 
-	Post      Post        `gorm:"foreignKey:PostID"`
+	Post      Post `gorm:"foreignKey:PostID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
+
+

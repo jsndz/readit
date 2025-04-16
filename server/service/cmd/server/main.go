@@ -6,6 +6,7 @@ import (
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/readit/pkg/db"
+	route "github.com/readit/routes"
 )
 
 func getEnv(key, fallback string) string {
@@ -22,6 +23,8 @@ func main() {
 	dbConn,err := db.InitDB()
 
 	db.MigrateDB(dbConn)
+	postGroup := app.Group("/api/post")
+	route.SetUpRoute(postGroup, dbConn)
 	if err!=nil {
 		fmt.Println(err)
 	}
