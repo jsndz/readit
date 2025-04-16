@@ -31,7 +31,7 @@ func (s *PostService) GetAllPosts() ([]model.Post, error) {
 	return s.postRepo.ReadAll()
 }
 
-func (s *PostService) UpdatePost(id uint, data map[string]any) (*model.Post, error) {
+func (s *PostService) UpdatePost(id uint, data model.Post) (*model.Post, error) {
 	return s.postRepo.Update(id, data)
 }
 

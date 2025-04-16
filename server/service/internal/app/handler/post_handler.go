@@ -117,7 +117,7 @@ func (h *PostHandler) UpdatePost(c *fiber.Ctx) error {
 		})
 	}
 
-	var updateData map[string]any
+	var updateData model.Post
 	if err := c.BodyParser(&updateData); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"message": "Invalid request body",

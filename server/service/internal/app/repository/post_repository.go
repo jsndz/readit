@@ -40,7 +40,7 @@ func (r *PostRepository) ReadAll() ([]model.Post, error) {
 	return posts, nil
 }
 
-func (r *PostRepository) Update(ID uint, data map[string]any) (*model.Post, error) {
+func (r *PostRepository) Update(ID uint, data model.Post) (*model.Post, error) {
 	var post model.Post
 	if err := r.db.Model(&post).Where("id = ?", ID).Updates(data).Error; err != nil {
 		return nil, err
