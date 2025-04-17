@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/readit/internal/app/model"
 	"gorm.io/gorm"
 )
@@ -18,18 +19,26 @@ func (r *CommentRepository) Create(comment *model.Comment) error {
 	return r.db.Create(comment).Error
 }
 
-func (r *CommentRepository) Read(ID string) (*model.Comment, error) {
+func (r *CommentRepository) Read(ID uint) (*model.Comment, error) {
     var comment model.Comment
-
-	err := r.db.Preload("Comments").First(&comment, "ID = ?", ID).Error
+	log.Infof("params %v",ID)
+	err := r.db.Preload("Children").First(&comment, "ID = ?", ID).Error
     if err != nil {
         return nil, err 
     }
     return &comment, nil
 }
 
+func (r *CommentRepository) ReadAll() ([]model.Comment, error) {
+	var comments []model.Comment
+	err := r.db.Find(&comments).Error
+	if err != nil {
+		return nil, err
+	}
+	return comments, nil
+}
 
-func (r *CommentRepository) Update(ID string,data map[string]any) (*model.Comment,error){
+func (r *CommentRepository) Update(ID uint,data model.Comment) (*model.Comment,error){
 	var comment model.Comment
 	if err:= r.db.Model(&comment).Where("ID = ?", ID).Updates(data).Error; err!=nil{
 		return nil, err
@@ -38,7 +47,7 @@ func (r *CommentRepository) Update(ID string,data map[string]any) (*model.Commen
 	return &comment,nil
 }
 
-func (r *CommentRepository) Delete(ID string) (error){
+func (r *CommentRepository) Delete(ID uint) (error){
 	var comment model.Comment
 	return  r.db.Delete(&comment,ID).Error
 	

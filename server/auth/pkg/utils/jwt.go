@@ -8,10 +8,11 @@ import (
 
 var jwtSecret = []byte("jwtSecret")
 
-func GenerateJWT(email string) (string, error) {
+func GenerateJWT(email string,userId uint) (string, error) {
 	claims := jwt.MapClaims{
+		"id"  : userId,
 		"email":   email,
-		"exp":     time.Now().Add(time.Hour * 24).Unix(), 
+		"exp":     time.Now().Add(time.Hour * 24).Unix(),
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)

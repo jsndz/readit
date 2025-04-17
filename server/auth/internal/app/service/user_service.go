@@ -22,11 +22,11 @@ func NewUserService (db *gorm.DB) * UserService {
 
 
 func (s *UserService) Signup(data model.User)(string,error){
-	err := s.userRepo.Create(&data);
+	userId,err := s.userRepo.Create(&data);
 	if  err != nil {
 		return "",err
 	}
-	jwt_token, err := utils.GenerateJWT(data.Email)
+	jwt_token, err := utils.GenerateJWT(data.Email,userId)
 	if  err != nil {
 		return "",err
 	}
@@ -44,7 +44,7 @@ func (s *UserService) Signin(Email string,Password string)(string,error){
 		return "", fmt.Errorf("invalid credentials")
 	}
 
-	jwt_token, err := utils.GenerateJWT(Email)
+	jwt_token, err := utils.GenerateJWT(Email,user.ID)
 
 	if  err != nil {
 		return "",err

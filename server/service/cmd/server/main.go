@@ -24,7 +24,9 @@ func main() {
 
 	db.MigrateDB(dbConn)
 	postGroup := app.Group("/api/post")
-	route.SetUpRoute(postGroup, dbConn)
+	route.PostRoute(postGroup, dbConn)
+	CommentRoute := app.Group("/api/comment")
+	route.CommentRoute(CommentRoute, dbConn)
 	if err!=nil {
 		fmt.Println(err)
 	}
