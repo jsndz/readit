@@ -15,7 +15,6 @@ func main() {
 		return proxy.Forward(c, "http://localhost:3001")
 	})
 
-	// Protected routes (JWT required)
 	app.All("/api/post/*", middleware.Authenticate, func(c *fiber.Ctx) error {
 		return proxy.Forward(c, "http://localhost:3000")
 	})

@@ -4,13 +4,16 @@ import (
 	"strings"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/golang-jwt/jwt/v5"
 )
-var secretKey = []byte("your-secret")
+var secretKey = []byte("jwtSecret")
 
 func Authenticate(c *fiber.Ctx) error {
 	auth :=c.Get("Authorization")
-	if (auth==""|| !strings.HasPrefix(auth,"Bearer ")){
+	log.Info("Hello")
+	log.Info("auth is ",auth)
+	if auth==""|| !strings.HasPrefix(auth,"Bearer "){
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"data":    nil,
 			"message": "Wrong or missing Authorization",
@@ -19,9 +22,11 @@ func Authenticate(c *fiber.Ctx) error {
 		})
 	}
 	tokenString := strings.TrimPrefix(auth,"Bearer ")
+	log.Info(tokenString)
 	token ,err := jwt.Parse(tokenString,func (t *jwt.Token)(interface{},error){
 		return secretKey,nil
 	})
+	log.Info(err)
 	if err != nil || !token.Valid {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message": "Invalid token",

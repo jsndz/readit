@@ -26,7 +26,7 @@ func main() {
 	if err!=nil {
 		fmt.Println(err)
 	}
-	app.Get("/", func(c *fiber.Ctx) error {
+	app.Get("/api/auth", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
 
