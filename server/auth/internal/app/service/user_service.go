@@ -33,21 +33,21 @@ func (s *UserService) Signup(data model.User)(string,error){
 	return jwt_token,nil
 }
 
-func (s *UserService) Signin(Email string,Password string)(string,error){
+func (s *UserService) Signin(Email string,Password string)(string,*model.User,error){
 	var user *model.User
 	user, err := s.userRepo.Get(Email)
 	if  err != nil {
-		return "", fmt.Errorf("user doesn't exist")
+		return "", nil,fmt.Errorf("user doesn't exist")
 	}
 
 	if !model.CheckPassword(user.Password,Password) {
-		return "", fmt.Errorf("invalid credentials")
+		return "", nil,fmt.Errorf("invalid credentials")
 	}
 
 	jwt_token, err := utils.GenerateJWT(Email,user.ID)
 
 	if  err != nil {
-		return "",err
+		return "",nil,err
 	}
-	return jwt_token,nil
+	return jwt_token,user,nil
 }

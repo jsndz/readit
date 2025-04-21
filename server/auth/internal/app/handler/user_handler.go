@@ -37,6 +37,14 @@ func (h *UserHandler) Signup (c *fiber.Ctx) error{
 			"err":     err.Error(),
 		})
 	}
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    token,
+		HTTPOnly: true,
+		Secure:   true,              
+		SameSite: "Strict",          
+		Path:     "/",
+	})
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
 		"data":    token,
 		"message": "Successfully created a new user",
@@ -57,7 +65,7 @@ func (h *UserHandler) Signin (c *fiber.Ctx) error{
 			"err":     err.Error(),
 		})
 	}
-	token, err := h.userService.Signin(req.Email,req.Password)
+	token,user, err := h.userService.Signin(req.Email,req.Password)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"data":    nil,
@@ -66,8 +74,16 @@ func (h *UserHandler) Signin (c *fiber.Ctx) error{
 			"err":     err.Error(),
 		})
 	}
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    token,
+		HTTPOnly: true,
+		Secure:   true,              
+		SameSite: "Strict",          
+		Path:     "/",
+	})
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
-		"data":    token,
+		"data":    user,
 		"message": "User Successfully signed in.",
 		"success": true,
 		"err":     nil,

@@ -60,6 +60,8 @@ export default function SignInPage() {
     try {
       const res = await signin(values.Email, values.Password);
       setUser(res?.data?.user);
+      console.log(res?.data);
+
       setIsLoading(false);
       router.push("/");
     } catch (error) {}
