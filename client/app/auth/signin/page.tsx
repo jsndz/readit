@@ -41,7 +41,7 @@ const formSchema = z.object({
 });
 
 export default function SignInPage() {
-  const { logout, setUser } = useAuthStore();
+  const { user, logout, setUser } = useAuthStore();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -59,8 +59,9 @@ export default function SignInPage() {
 
     try {
       const res = await signin(values.Email, values.Password);
-      setUser(res?.data?.user);
-      console.log(res?.data);
+      console.log(res);
+      setUser(res!);
+      console.log("user", user);
 
       setIsLoading(false);
       router.push("/");

@@ -22,7 +22,12 @@ export const signup = async (
       Email,
     });
 
-    return res;
+    return {
+      ID: res.data.data.ID,
+      Username: res.data.data.Username,
+      Image: res.data.data.Image,
+      Email: res.data.data.Email,
+    };
   } catch (error) {
     console.error(error);
     throw error;
@@ -40,8 +45,14 @@ export const signin = async (Email: string, Password: string) => {
       Password,
       Email,
     });
+    console.log(res);
 
-    return res;
+    return {
+      ID: res.data.data.ID,
+      Username: res.data.data.Username,
+      Image: res.data.data.Image,
+      Email: res.data.data.Email,
+    };
   } catch (error) {
     console.error(error);
     throw error;

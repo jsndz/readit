@@ -8,7 +8,8 @@ export interface AuthActions {
 }
 
 export interface User {
-  id: number;
-  username: string;
-  image?: string;
+  ID: number;
+  Username: string;
+  Image?: string;
+  Email: string;
 }

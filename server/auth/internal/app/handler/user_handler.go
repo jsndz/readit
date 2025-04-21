@@ -28,7 +28,7 @@ func (h *UserHandler) Signup (c *fiber.Ctx) error{
 			"err":     err.Error(),
 		})
 	}
-	token, err := h.userService.Signup(req)
+	token,user, err := h.userService.Signup(req)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"data":    nil,
@@ -46,7 +46,7 @@ func (h *UserHandler) Signup (c *fiber.Ctx) error{
 		Path:     "/",
 	})
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
-		"data":    token,
+		"data":    user,
 		"message": "Successfully created a new user",
 		"success": true,
 		"err":     nil,

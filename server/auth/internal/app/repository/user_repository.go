@@ -15,12 +15,12 @@ func NewUserRepository(db *gorm.DB) *UserRepository {
 	return &UserRepository{db: db}
 }
 
-func (r *UserRepository) Create(user *model.User) (uint ,error) {
+func (r *UserRepository) Create(user *model.User) (*model.User ,error) {
 	if err := r.db.Create(user).Error; err != nil {
 		log.Error("Something went wrong in Create:", err)
-		return  0,err
+		return  nil,err
 	}
-	return  user.ID,nil
+	return  user,nil
 }
 
 func (r *UserRepository) Get(Email string) (*model.User, error) {

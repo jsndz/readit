@@ -21,16 +21,16 @@ func NewUserService (db *gorm.DB) * UserService {
 }
 
 
-func (s *UserService) Signup(data model.User)(string,error){
-	userId,err := s.userRepo.Create(&data);
+func (s *UserService) Signup(data model.User)(string,*model.User,error){
+	user,err := s.userRepo.Create(&data);
 	if  err != nil {
-		return "",err
+		return "",nil,err
 	}
-	jwt_token, err := utils.GenerateJWT(data.Email,userId)
+	jwt_token, err := utils.GenerateJWT(data.Email,user.ID)
 	if  err != nil {
-		return "",err
+		return "",nil,err
 	}
-	return jwt_token,nil
+	return jwt_token,user,nil
 }
 
 func (s *UserService) Signin(Email string,Password string)(string,*model.User,error){
