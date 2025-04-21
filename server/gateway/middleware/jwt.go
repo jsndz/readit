@@ -11,8 +11,6 @@ var secretKey = []byte("jwtSecret")
 
 func Authenticate(c *fiber.Ctx) error {
 	auth :=c.Get("Authorization")
-	log.Info("Hello")
-	log.Info("auth is ",auth)
 	if auth==""|| !strings.HasPrefix(auth,"Bearer "){
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 			"data":    nil,
@@ -26,7 +24,6 @@ func Authenticate(c *fiber.Ctx) error {
 	token ,err := jwt.Parse(tokenString,func (t *jwt.Token)(interface{},error){
 		return secretKey,nil
 	})
-	log.Info(err)
 	if err != nil || !token.Valid {
 		return c.Status(fiber.StatusUnauthorized).JSON(fiber.Map{
 			"message": "Invalid token",

@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/logger"
-
 	"github.com/jsndz/readit/api-gateway/middleware"
 	"github.com/jsndz/readit/api-gateway/proxy"
 )
