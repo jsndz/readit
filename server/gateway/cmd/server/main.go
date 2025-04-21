@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/gofiber/fiber/v2/middleware/logger"
 	"github.com/jsndz/readit/api-gateway/middleware"
 	"github.com/jsndz/readit/api-gateway/proxy"
@@ -9,6 +10,11 @@ import (
 
 func main() {
 	app := fiber.New()
+	app.Use(cors.New(cors.Config{
+		AllowOrigins: "http://localhost:3002",
+		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
+		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
+	}))
 	app.Use(logger.New())
 	app.All("/api/auth/*", func(c *fiber.Ctx) error {
 		return proxy.Forward(c, "http://localhost:3001")
