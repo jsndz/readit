@@ -40,17 +40,22 @@ const formSchema = z.object({
   community: z.string({
     required_error: "Please select a community.",
   }),
-  title: z.string().min(1, {
-    message: "Title is required.",
-  }).max(300, {
-    message: "Title cannot be longer than 300 characters.",
-  }),
-  postType: z.enum(["post", "image", "link"]),
+  title: z
+    .string()
+    .min(1, {
+      message: "Title is required.",
+    })
+    .max(300, {
+      message: "Title cannot be longer than 300 characters.",
+    }),
+
   content: z.string().optional(),
-  imageUrl: z.string().optional(),
-  link: z.string().url({
-    message: "Please enter a valid URL.",
-  }).optional(),
+  link: z
+    .string()
+    .url({
+      message: "Please enter a valid URL.",
+    })
+    .optional(),
   tags: z.string().optional(),
 });
 
@@ -59,15 +64,13 @@ export default function SubmitPage() {
   const searchParams = useSearchParams();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const postType = searchParams.get("type") || "post";
-  
+
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       community: "",
       title: "",
-      postType: postType as "post" | "image" | "link",
       content: "",
-      imageUrl: "",
       link: "",
       tags: "",
     },
@@ -75,7 +78,7 @@ export default function SubmitPage() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
-    
+
     // Simulate API call
     setTimeout(() => {
       setIsSubmitting(false);
@@ -98,39 +101,48 @@ export default function SubmitPage() {
           </BreadcrumbList>
         </Breadcrumb>
       </div>
-      
+
       <div className="max-w-3xl mx-auto">
         <h1 className="text-2xl font-bold mb-6">Create a post</h1>
-        
+
         <Card>
           <CardContent className="p-6">
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+              <form
+                onSubmit={form.handleSubmit(onSubmit)}
+                className="space-y-6"
+              >
                 <FormField
                   control={form.control}
                   name="community"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Community</FormLabel>
-                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormLabel>Topic</FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
                         <FormControl>
                           <SelectTrigger>
-                            <SelectValue placeholder="Select a community" />
+                            <SelectValue placeholder="Select a topic" />
                           </SelectTrigger>
                         </FormControl>
                         <SelectContent>
-                          <SelectItem value="programming">r/programming</SelectItem>
-                          <SelectItem value="webdev">r/webdev</SelectItem>
-                          <SelectItem value="reactjs">r/reactjs</SelectItem>
-                          <SelectItem value="nextjs">r/nextjs</SelectItem>
-                          <SelectItem value="javascript">r/javascript</SelectItem>
+                          <SelectItem value="tech">Tech</SelectItem>
+                          <SelectItem value="gaming">Gaming</SelectItem>
+                          <SelectItem value="finance">Finance</SelectItem>
+                          <SelectItem value="art">Art</SelectItem>
+                          <SelectItem value="education">Education</SelectItem>
+                          <SelectItem value="news">News</SelectItem>
+                          <SelectItem value="memes">Memes</SelectItem>
+                          <SelectItem value="career">Career</SelectItem>
                         </SelectContent>
                       </Select>
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                
+
                 <FormField
                   control={form.control}
                   name="title"
@@ -147,85 +159,7 @@ export default function SubmitPage() {
                     </FormItem>
                   )}
                 />
-                
-                <Tabs defaultValue={postType} onValueChange={(value) => form.setValue("postType", value as "post" | "image" | "link")}>
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="post" className="flex items-center gap-2">
-                      <MessageSquare className="h-4 w-4" />
-                      <span>Post</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="image" className="flex items-center gap-2">
-                      <ImagePlus className="h-4 w-4" />
-                      <span>Image</span>
-                    </TabsTrigger>
-                    <TabsTrigger value="link" className="flex items-center gap-2">
-                      <Link2 className="h-4 w-4" />
-                      <span>Link</span>
-                    </TabsTrigger>
-                  </TabsList>
-                  
-                  <TabsContent value="post" className="pt-4">
-                    <FormField
-                      control={form.control}
-                      name="content"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Text (optional)</FormLabel>
-                          <FormControl>
-                            <Textarea
-                              placeholder="Text (optional)"
-                              className="min-h-40 resize-y"
-                              {...field}
-                            />
-                          </FormControl>
-                          <FormDescription>
-                            You can format your post with markdown.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </TabsContent>
-                  
-                  <TabsContent value="image" className="pt-4">
-                    <FormField
-                      control={form.control}
-                      name="imageUrl"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>Image URL</FormLabel>
-                          <FormControl>
-                            <Input placeholder="https://example.com/image.jpg" {...field} />
-                          </FormControl>
-                          <FormDescription>
-                            Enter a direct link to an image.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </TabsContent>
-                  
-                  <TabsContent value="link" className="pt-4">
-                    <FormField
-                      control={form.control}
-                      name="link"
-                      render={({ field }) => (
-                        <FormItem>
-                          <FormLabel>URL</FormLabel>
-                          <FormControl>
-                            <Input placeholder="https://example.com" {...field} />
-                          </FormControl>
-                          <FormDescription>
-                            Share an interesting link with the community.
-                          </FormDescription>
-                          <FormMessage />
-                        </FormItem>
-                      )}
-                    />
-                  </TabsContent>
-                </Tabs>
-                
+
                 <FormField
                   control={form.control}
                   name="tags"
@@ -233,7 +167,10 @@ export default function SubmitPage() {
                     <FormItem>
                       <FormLabel>Tags (optional)</FormLabel>
                       <FormControl>
-                        <Input placeholder="e.g. Discussion, Question, News (comma separated)" {...field} />
+                        <Input
+                          placeholder="e.g. Discussion, Question, News (comma separated)"
+                          {...field}
+                        />
                       </FormControl>
                       <FormDescription>
                         Add relevant tags to help categorize your post.
@@ -242,12 +179,14 @@ export default function SubmitPage() {
                     </FormItem>
                   )}
                 />
-                
+
                 <div className="flex items-center justify-end space-x-4">
                   <Button type="button" variant="outline" asChild>
                     <Link href="/">Cancel</Link>
                   </Button>
-                  <Button type="button" variant="outline">Save Draft</Button>
+                  <Button type="button" variant="outline">
+                    Save Draft
+                  </Button>
                   <Button type="submit" disabled={isSubmitting}>
                     {isSubmitting ? (
                       <>
