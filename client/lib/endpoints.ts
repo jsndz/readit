@@ -59,25 +59,16 @@ export const signin = async (Email: string, Password: string) => {
   }
 };
 
-export const post = async (Email: string, Password: string) => {
-  if (!Password || !Email) {
-    console.error("Didnt get  user info");
-    return;
-  }
+export const post = async (data: any) => {
+  console.log(data);
 
   try {
-    const res = await axios.post(`${url}/api/auth/signin/`, {
-      Password,
-      Email,
+    const res = await axios.post(`${url}/api/post/create`, data, {
+      withCredentials: true,
     });
     console.log(res);
 
-    return {
-      ID: res.data.data.ID,
-      Username: res.data.data.Username,
-      Image: res.data.data.Image,
-      Email: res.data.data.Email,
-    };
+    return res;
   } catch (error) {
     console.error(error);
     throw error;
