@@ -37,8 +37,8 @@ import {
 } from "@/components/ui/breadcrumb";
 
 const formSchema = z.object({
-  community: z.string({
-    required_error: "Please select a community.",
+  topic: z.string({
+    required_error: "Please select a topic.",
   }),
   title: z
     .string()
@@ -68,7 +68,7 @@ export default function SubmitPage() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      community: "",
+      topic: "",
       title: "",
       content: "",
       link: "",
@@ -78,6 +78,7 @@ export default function SubmitPage() {
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     setIsSubmitting(true);
+    console.log(values);
 
     // Simulate API call
     setTimeout(() => {
@@ -114,7 +115,7 @@ export default function SubmitPage() {
               >
                 <FormField
                   control={form.control}
-                  name="community"
+                  name="topic"
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel>Topic</FormLabel>
@@ -159,7 +160,22 @@ export default function SubmitPage() {
                     </FormItem>
                   )}
                 />
-
+                <FormField
+                  control={form.control}
+                  name="content"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Content</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Content" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        A good content is descriptive and engaging.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="tags"
