@@ -4,7 +4,6 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/readit/internal/app/model"
 	"github.com/readit/internal/app/service"
 	"gorm.io/gorm"
@@ -68,7 +67,6 @@ func (h *CommentHandler) GetCommentByID(c *fiber.Ctx) error {
 			"err":     err.Error(),
 		})
 	}
-	log.Infof("idParam %v",idParam)
 	comment, err := h.commentService.GetCommentByID(uint(commentID))
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{

@@ -11,7 +11,6 @@ import (
 
 
 func Forward(c *fiber.Ctx, target string) error{
-
 		req,err:= http.NewRequest(c.Method(),target+c.OriginalURL(),bytes.NewReader(c.Body()))
 		if(err!=nil){
 			return err
@@ -40,6 +39,8 @@ func Forward(c *fiber.Ctx, target string) error{
 		return c.Status(resp.StatusCode).Send(body)
 	
 }
+
+
 
 func ForwardOnly(c *fiber.Ctx, target string) error {
 	req, err := http.NewRequest(c.Method(), target+c.OriginalURL(), bytes.NewReader(c.Body()))
@@ -72,6 +73,7 @@ func ForwardOnly(c *fiber.Ctx, target string) error {
 	if err := json.Unmarshal(bodyBytes, &responseBody); err != nil {
 		return err
 	}
+
 
 	if token, ok := responseBody["token"].(string); ok {
 		c.Cookie(&fiber.Cookie{

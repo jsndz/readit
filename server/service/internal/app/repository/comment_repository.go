@@ -1,7 +1,6 @@
 package repository
 
 import (
-	"github.com/gofiber/fiber/v2/log"
 	"github.com/readit/internal/app/model"
 	"gorm.io/gorm"
 )
@@ -21,7 +20,6 @@ func (r *CommentRepository) Create(comment *model.Comment) error {
 
 func (r *CommentRepository) Read(ID uint) (*model.Comment, error) {
     var comment model.Comment
-	log.Infof("params %v",ID)
 	err := r.db.Preload("Children").First(&comment, "ID = ?", ID).Error
     if err != nil {
         return nil, err 

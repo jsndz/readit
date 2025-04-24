@@ -16,11 +16,17 @@ export const signup = async (
   }
 
   try {
-    const res = await axios.post(`${url}/api/auth/signin/`, {
-      Username,
-      Password,
-      Email,
-    });
+    const res = await axios.post(
+      `${url}/api/auth/signin/`,
+      {
+        Username,
+        Password,
+        Email,
+      },
+      {
+        withCredentials: true,
+      }
+    );
 
     return {
       ID: res.data.data.ID,
@@ -41,10 +47,16 @@ export const signin = async (Email: string, Password: string) => {
   }
 
   try {
-    const res = await axios.post(`${url}/api/auth/signin/`, {
-      Password,
-      Email,
-    });
+    const res = await axios.post(
+      `${url}/api/auth/signin/`,
+      {
+        Password,
+        Email,
+      },
+      {
+        withCredentials: true,
+      }
+    );
     console.log(res);
 
     return {
