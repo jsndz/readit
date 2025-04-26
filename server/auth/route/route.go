@@ -11,5 +11,5 @@ func SetUpRoute(router fiber.Router,db *gorm.DB){
 
 	router.Post("/signup",userHandler.Signup)
 	router.Post("/signin",userHandler.Signin)
-
+	router.Get("/username/:id",userHandler.Getname)
 }

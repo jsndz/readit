@@ -27,6 +27,7 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Loader2 } from "lucide-react";
 import { post } from "@/lib/endpoints";
+import { useAuthStore } from "@/lib/authStore";
 
 const formSchema = z.object({
   title: z.string().min(1, "Title is required").max(255),
@@ -45,6 +46,7 @@ const formSchema = z.object({
 });
 
 export default function CreatePostPage() {
+  const { getUser } = useAuthStore();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -59,9 +61,13 @@ export default function CreatePostPage() {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
+    const userId = getUser;
+    console.log(userId);
+
+    var newData = { ...data, ID: userId };
     setLoading(true);
     try {
-      await post(data);
+      await post(newData);
       router.push("/");
     } catch (err) {
       console.error(err);

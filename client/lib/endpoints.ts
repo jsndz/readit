@@ -86,3 +86,17 @@ export const post = async (data: any) => {
     throw error;
   }
 };
+
+export const getPost = async (id: number) => {
+  try {
+    const res = await axios.get(`${url}/api/post/get/${id}`, {
+      withCredentials: true,
+    });
+    console.log(res);
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

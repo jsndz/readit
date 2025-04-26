@@ -47,3 +47,12 @@ func (r *UserRepository) Delete(ID string) (error){
 	return  r.db.Delete(&user,ID).Error
 	
 }
+
+func (r *UserRepository) GetName(ID uint) (string ,error){
+	var user model.User
+	err := r.db.First(&user, ID).Error
+	if err != nil {
+		return "", err
+	}
+	return user.Username,nil
+}

@@ -19,30 +19,24 @@ func main() {
 	app.Use(func (c *fiber.Ctx) error {
 		limiter:= middleware.NewRateLimiter(5,10)
 		if limiter.Allow(){
-			c.Next()
+		return	c.Next()
 		} 
-			return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
-				"data":    nil,
-				"message": "Too many requests",
-				"success": false,
-			})
-		
+		return c.Status(fiber.StatusTooManyRequests).JSON(fiber.Map{
+			"data":    nil,
+			"message": "Too many requests",
+			"success": false,
+		})
 	})
 	app.Use(logger.New())
-
-		app.All("/api/auth/*", func(c *fiber.Ctx) error {
-			return proxy.ForwardOnly(c, "http://localhost:3001")
-		})
-	
-		app.All("/api/post/*", middleware.Authenticate, func(c *fiber.Ctx) error {
-	
-			return proxy.Forward(c, "http://localhost:3000")
-		})
-		app.All("/api/comment/*", middleware.Authenticate, func(c *fiber.Ctx) error {
-			return proxy.Forward(c, "http://localhost:3000")
-		})
-	
-	
+	app.All("/api/auth/*", func(c *fiber.Ctx) error {
+		return proxy.ForwardOnly(c, "http://localhost:3001")
+	})
+	app.All("/api/post/*", middleware.Authenticate, func(c *fiber.Ctx) error {
+		return proxy.Forward(c, "http://localhost:3000")
+	})
+	app.All("/api/comment/*", middleware.Authenticate, func(c *fiber.Ctx) error {
+		return proxy.Forward(c, "http://localhost:3000")
+	})
 	app.Listen(":8080")
 }
 

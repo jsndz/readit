@@ -1,6 +1,8 @@
 package handler
 
 import (
+	"strconv"
+
 	"github.com/gofiber/fiber/v2"
 	"github.com/jsndz/readit/auth/internal/app/model"
 	"github.com/jsndz/readit/auth/internal/app/service"
@@ -73,6 +75,38 @@ func (h *UserHandler) Signin (c *fiber.Ctx) error{
 		"token":token,
 		"data":    user,
 		"message": "User Successfully signed in.",
+		"success": true,
+		"err":     nil,
+	}) 
+}
+
+func (h *UserHandler) Getname (c *fiber.Ctx) error{
+	idParamStr := c.Params("id")
+	idParam, err := strconv.ParseUint(idParamStr, 10, 32)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"data":    nil,
+			"message": "Invalid ID parameter",
+			"success": false,
+			"err":     err.Error(),
+		})
+	}
+
+
+	username, err := h.userService.GetName(uint(idParam))
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"data":    nil,
+			"message": "Couldn't get username.",
+			"success": false,
+			"err":     err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		
+		"data":    username,
+		"message": "returned username successfully.",
 		"success": true,
 		"err":     nil,
 	}) 

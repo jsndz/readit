@@ -51,3 +51,8 @@ func (s *UserService) Signin(Email string,Password string)(string,*model.User,er
 	}
 	return jwt_token,user,nil
 }
+
+
+func (s *UserService) GetName(ID uint)(string,error){
+	return s.userRepo.GetName(ID)
+}
