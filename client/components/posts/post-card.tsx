@@ -180,15 +180,17 @@ export function PostCard({ post, compact = false }: PostCardProps) {
 
             {!compact && (
               <div className="mt-2">
-                {post.tags && post.tags.length > 0 && (
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {post.tags.split(",").map((tag) => (
-                      <Badge key={tag} variant="secondary">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                )}
+                {typeof post.tags === "string" &&
+                  post.tags &&
+                  post.tags.length > 0 && (
+                    <div className="flex flex-wrap gap-2 mb-3">
+                      {post.tags.split(",").map((tag) => (
+                        <Badge key={tag} variant="secondary">
+                          {tag}
+                        </Badge>
+                      ))}
+                    </div>
+                  )}
               </div>
             )}
           </Link>

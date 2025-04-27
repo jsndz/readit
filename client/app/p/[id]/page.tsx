@@ -1,35 +1,35 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
-import { ArrowLeft } from "lucide-react";
 import { PostCard, Post } from "@/components/posts/post-card";
 import { Comment, CommentType } from "@/components/posts/comment";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
+import { useEffect, useState } from "react";
+import { getPost } from "@/lib/endpoints";
 
-const comments: CommentType[] = [
-  /* your existing comments array here */
-];
+const comments: CommentType[] = [];
 
 interface PageProps {
   params: {
-    communityName: string;
-    postId: string;
+    id: string;
   };
 }
 
 export default function PostPage({ params }: PageProps) {
-  const { communityName } = params;
-
+  const { id } = params;
+  const [post, setPost] = useState<Post | null>(null);
+  useEffect(() => {
+    async function init() {
+      const response = await getPost(id);
+      setPost(response);
+      console.log(post);
+    }
+    init();
+  }, []);
   return (
     <div className="container px-4 py-6 md:py-8 max-w-4xl mx-auto space-y-6">
-      <Button variant="outline" size="sm" className="gap-1" asChild>
-        <Link href={`/r/${communityName}`}>
-          <ArrowLeft className="h-4 w-4" />
-          <span>Back</span>
-        </Link>
-      </Button>
-
       <div className="rounded-lg border bg-card overflow-hidden">
         <div className="flex">
           <div className="flex bg-muted/40 items-center justify-center px-4">
@@ -55,7 +55,7 @@ export default function PostPage({ params }: PageProps) {
                 </svg>
               </Button>
               <span className="font-medium text-sm py-1">
-                {post.upvotes - post.downvotes}
+                {(post?.Likes ?? 0) - (post?.Dislikes ?? 0)}
               </span>
               <Button
                 size="icon"
@@ -83,16 +83,16 @@ export default function PostPage({ params }: PageProps) {
           <div className="p-6 flex-1">
             <div className="flex items-center gap-2 mb-2 text-sm text-muted-foreground">
               <span>Posted by</span>
-              <Link href={`/u/${post.authorName}`} className="hover:underline">
-                u/{post.authorName}
+              <Link href={`/u/${post?.AuthorName}`} className="hover:underline">
+                u/{post?.AuthorName}
               </Link>
             </div>
 
-            <h1 className="text-2xl font-bold mb-4">{post.title}</h1>
+            <h1 className="text-2xl font-bold mb-4">{post?.Title}</h1>
 
-            {post.tags && post.tags.length > 0 && (
+            {post?.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
-                {post.tags.map((tag) => (
+                {post?.tags?.split(",").map((tag) => (
                   <span
                     key={tag}
                     className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground"
@@ -103,19 +103,8 @@ export default function PostPage({ params }: PageProps) {
               </div>
             )}
 
-            {post.imageUrl && (
-              <div className="relative w-full aspect-video mb-6 overflow-hidden rounded-md">
-                <Image
-                  src={post.imageUrl}
-                  alt={post.title}
-                  fill
-                  className="object-cover"
-                />
-              </div>
-            )}
-
             <div className="prose prose-neutral dark:prose-invert max-w-none">
-              {post.content.split("\n\n").map((paragraph, i) => (
+              {post?.Content.split("\n\n").map((paragraph, i) => (
                 <p key={i} className="mb-4">
                   {paragraph}
                 </p>

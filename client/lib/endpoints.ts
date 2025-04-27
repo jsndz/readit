@@ -87,14 +87,21 @@ export const post = async (data: any) => {
   }
 };
 
-export const getPost = async (id: number) => {
+export const getPost = async (id: string) => {
   try {
     const res = await axios.get(`${url}/api/post/get/${id}`, {
       withCredentials: true,
     });
-    console.log(res);
 
-    return res;
+    return {
+      ID: res.data.data.ID,
+      Title: res.data.data.Title,
+      Content: res.data.data.Content,
+      AuthorName: res.data.username.data,
+      Likes: res.data.data.Likes,
+      Dislikes: res.data.data.Dislikes,
+      tags: res.data.data.Tags,
+    };
   } catch (error) {
     console.error(error);
     throw error;
