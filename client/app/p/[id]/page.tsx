@@ -26,6 +26,7 @@ export default function PostPage({ params }: PageProps) {
     async function init() {
       const response = await getPost(id);
       setPost(response);
+      setNewComments(response.Comments);
       console.log(response);
     }
     init();

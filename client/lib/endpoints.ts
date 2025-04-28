@@ -117,6 +117,7 @@ export const getPost = async (id: string) => {
       Likes: res.data.data.Likes,
       Dislikes: res.data.data.Dislikes,
       tags: res.data.data.Tags,
+      Comments: res.data.data.Comments,
     };
   } catch (error) {
     console.error(error);

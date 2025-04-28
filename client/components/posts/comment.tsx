@@ -53,9 +53,6 @@ export function Comment({ comment, level = 0 }: CommentProps) {
               <span className="font-semibold text-foreground">
                 u/{comment.AuthorName}
               </span>
-              <span className="text-xs">
-                {formatDistanceToNow(new Date(comment.CreatedAt))} ago
-              </span>
             </div>
             <div className="text-sm whitespace-pre-line">{comment.Content}</div>
             <div className="flex gap-2 mt-2">
