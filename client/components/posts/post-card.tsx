@@ -24,6 +24,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
+import { CommentType } from "./comment";
 
 export type Post = {
   ID: string;
@@ -33,6 +34,7 @@ export type Post = {
   Likes: number;
   Dislikes: number;
   tags?: string;
+  Comments?: CommentType[];
 };
 
 interface PostCardProps {

@@ -61,10 +61,10 @@ export default function CreatePostPage() {
   });
 
   const onSubmit = async (data: z.infer<typeof formSchema>) => {
-    const userId = getUser;
-    console.log(userId);
+    const user = getUser();
+    console.log(user?.ID);
 
-    var newData = { ...data, ID: userId };
+    var newData = { ...data, ID: user?.ID };
     setLoading(true);
     try {
       await post(newData);

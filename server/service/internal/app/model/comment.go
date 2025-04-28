@@ -7,7 +7,7 @@ type Comment struct {
 	Likes     uint
 	Dislikes  uint
 
-	UserID    uint `gorm:"not null"`
+	Username    string `gorm:"not "`
 	PostID    uint `gorm:"not null"`
 
 	ParentID  *uint

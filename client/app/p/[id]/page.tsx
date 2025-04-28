@@ -7,9 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { getPost } from "@/lib/endpoints";
-
-const comments: CommentType[] = [];
+import { comment, getPost } from "@/lib/endpoints";
+import { useAuthStore } from "@/lib/authStore";
 
 interface PageProps {
   params: {
@@ -20,14 +19,39 @@ interface PageProps {
 export default function PostPage({ params }: PageProps) {
   const { id } = params;
   const [post, setPost] = useState<Post | null>(null);
+  const [commentText, setCommentText] = useState("");
+  const [newComments, setNewComments] = useState<CommentType[]>([]);
+  const { getUser } = useAuthStore();
   useEffect(() => {
     async function init() {
       const response = await getPost(id);
       setPost(response);
-      console.log(post);
+      console.log(response);
     }
     init();
-  }, []);
+  }, [id]);
+
+  async function submitComment() {
+    if (!commentText.trim()) return;
+
+    try {
+      const user = getUser();
+      const response = await comment({
+        Content: commentText,
+        Username: user?.Username,
+        PostID: parseInt(id, 10),
+      });
+
+      const newComment = response.data;
+      setNewComments((prev) => [newComment, ...prev]);
+      setCommentText("");
+    } catch (error) {
+      console.error("Error submitting comment:", error);
+    }
+  }
+
+  const comments = [...(post?.Comments ?? []), ...newComments];
+
   return (
     <div className="container px-4 py-6 md:py-8 max-w-4xl mx-auto space-y-6">
       <div className="rounded-lg border bg-card overflow-hidden">
@@ -39,6 +63,7 @@ export default function PostPage({ params }: PageProps) {
                 variant="ghost"
                 className="text-muted-foreground hover:text-primary hover:bg-primary/10"
               >
+                {/* Upvote SVG */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -62,6 +87,7 @@ export default function PostPage({ params }: PageProps) {
                 variant="ghost"
                 className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
               >
+                {/* Downvote SVG */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -92,7 +118,7 @@ export default function PostPage({ params }: PageProps) {
 
             {post?.tags && post.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-4">
-                {post?.tags?.split(",").map((tag) => (
+                {post.tags.split(",").map((tag) => (
                   <span
                     key={tag}
                     className="inline-flex items-center rounded-md bg-secondary px-2 py-1 text-xs font-medium text-secondary-foreground"
@@ -114,20 +140,24 @@ export default function PostPage({ params }: PageProps) {
         </div>
       </div>
 
+      {/* COMMENT SECTION */}
       <div className="space-y-4">
         <Card>
           <CardContent className="p-4">
             <h3 className="font-medium mb-2">Comment as u/shadcn</h3>
             <Textarea
+              value={commentText}
+              onChange={(e) => setCommentText(e.target.value)}
               placeholder="What are your thoughts?"
               className="min-h-32 mb-2"
             />
             <div className="flex justify-end">
-              <Button>Comment</Button>
+              <Button onClick={submitComment}>Comment</Button>
             </div>
           </CardContent>
         </Card>
 
+        {/* COMMENTS LIST */}
         <div className="border-t pt-4">
           <div className="flex items-center mb-4 space-x-2">
             <Button variant="outline" size="sm">
@@ -140,7 +170,7 @@ export default function PostPage({ params }: PageProps) {
 
           <div className="space-y-4">
             {comments.map((comment) => (
-              <Comment key={comment.id} comment={comment} />
+              <Comment key={comment.ID} comment={comment} />
             ))}
           </div>
         </div>

@@ -8,7 +8,7 @@ type Post struct {
 	Dislikes uint
 	Tags     string
 	UserID   uint `gorm:"not null"`
-	Topic string `gorm:"type:varchar(50)"`
+	Topic 	 string `gorm:"type:varchar(50)"`
 	Comments []Comment `gorm:"foreignKey:PostID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 }
 

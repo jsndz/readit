@@ -4,7 +4,7 @@ import { persist } from "zustand/middleware";
 
 export type AuthStore = AuthState &
   AuthActions & {
-    getUser: () => number | null;
+    getUser: () => User | null;
   };
 
 export const useAuthStore = create<AuthStore>()(
@@ -13,7 +13,7 @@ export const useAuthStore = create<AuthStore>()(
       user: null,
       setUser: (user: User | null) => set(() => ({ user })),
       logout: () => set(() => ({ user: null })),
-      getUser: () => get().user?.ID!,
+      getUser: () => get().user!,
     }),
     {
       name: "auth-storage",

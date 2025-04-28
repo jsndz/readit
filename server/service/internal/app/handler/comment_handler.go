@@ -4,6 +4,7 @@ import (
 	"strconv"
 
 	"github.com/gofiber/fiber/v2"
+	"github.com/gofiber/fiber/v2/log"
 	"github.com/readit/internal/app/model"
 	"github.com/readit/internal/app/service"
 	"gorm.io/gorm"
@@ -21,6 +22,7 @@ func NewCommentHandler(db *gorm.DB) * CommentHandler {
 
 func (h *CommentHandler) CreateComment (c *fiber.Ctx) error{
 	var req model.Comment
+log.Infof("hello %v",req)
 
 	if err:= c.BodyParser(&req);err!=nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{

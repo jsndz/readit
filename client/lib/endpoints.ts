@@ -87,6 +87,22 @@ export const post = async (data: any) => {
   }
 };
 
+export const comment = async (data: any) => {
+  console.log(data);
+
+  try {
+    const res = await axios.post(`${url}/api/comment/create`, data, {
+      withCredentials: true,
+    });
+    console.log(res);
+
+    return res;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
 export const getPost = async (id: string) => {
   try {
     const res = await axios.get(`${url}/api/post/get/${id}`, {
