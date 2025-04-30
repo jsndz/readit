@@ -1,6 +1,6 @@
 "use client";
-import { addComment, reply } from "@/lib/endpoints";
 
+import { reply } from "@/lib/endpoints";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,7 +11,6 @@ import { useAuthStore } from "@/lib/authStore";
 export type CommentType = {
   ID: number;
   Content: string;
-  UserID: number;
   AuthorName: string;
   CreatedAt: string;
   PostID: number;
@@ -42,14 +41,21 @@ export function Comment({
 
   const handleReplySubmit = async () => {
     if (!replyContent.trim()) return;
-    const res = await reply({
-      Content: replyContent,
-      Username: user?.Username,
-      PostID: postID,
-      ParentID: commentID,
-    });
-    setReplyContent("");
-    setIsReplying(false);
+
+    try {
+      await reply({
+        Content: replyContent,
+        Username: user?.Username,
+        PostID: postID,
+        ParentID: commentID,
+      });
+
+      setReplyContent("");
+      setIsReplying(false);
+      // You may want to revalidate comments or trigger a refresh here
+    } catch (err) {
+      console.error("Failed to reply:", err);
+    }
   };
 
   const maxLevel = 5;
@@ -66,17 +72,24 @@ export function Comment({
               <span className="font-semibold text-foreground">
                 u/{comment.AuthorName}
               </span>
+              <span className="text-xs text-muted-foreground">
+                {new Date(comment.CreatedAt).toLocaleString()}
+              </span>
             </div>
+
             <div className="text-sm whitespace-pre-line">{comment.Content}</div>
+
             <div className="flex gap-2 mt-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-xs p-1 h-6"
-                onClick={handleReplyToggle}
-              >
-                {isReplying ? "Cancel" : "Reply"}
-              </Button>
+              {user && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-xs p-1 h-6"
+                  onClick={handleReplyToggle}
+                >
+                  {isReplying ? "Cancel" : "Reply"}
+                </Button>
+              )}
             </div>
 
             {isReplying && (
@@ -105,7 +118,7 @@ export function Comment({
         </CardContent>
       </Card>
 
-      {/* Render child comments recursively */}
+      {/* Recursive Children */}
       {comment.Children && comment.Children.length > 0 && (
         <div className="space-y-4 mt-2">
           {comment.Children.map((child) => (

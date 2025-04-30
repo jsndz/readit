@@ -24,7 +24,7 @@ func (r *PostRepository) Create(post *model.Post) error {
 
 func (r *PostRepository) Read(ID uint) (*model.Post, error) {
 	var post model.Post
-	err := r.db.Preload("Comments").First(&post, ID).Error
+	err := r.db.Preload("Comments", "parent_id IS NULL").Preload("Comments.Children").First(&post, ID).Error
 	if err != nil {
 		return nil, err
 	}
