@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type Comment struct {
 	ID        uint   `gorm:"primaryKey"`
 	Content   string `gorm:"type:text"`
@@ -14,6 +16,9 @@ type Comment struct {
 	Children  []Comment `gorm:"foreignKey:ParentID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
 
 	Post      Post `gorm:"foreignKey:PostID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+
+	CreatedAt time.Time
+    UpdatedAt time.Time
 }
 
 

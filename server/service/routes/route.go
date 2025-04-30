@@ -14,6 +14,8 @@ func PostRoute(router fiber.Router,db *gorm.DB){
 	router.Get("/getAll",postHandler.GetAllPosts)
 	router.Put("/update/:id",postHandler.UpdatePost)
 	router.Delete("/delete/:id",postHandler.DeletePost)
+	router.Get("/feed",postHandler.GetFeed)
+
 }
 
 func CommentRoute(router fiber.Router,db *gorm.DB){

@@ -54,3 +54,15 @@ func (r *PostRepository) Update(ID uint, data model.Post) (*model.Post, error) {
 func (r *PostRepository) Delete(ID uint) error {
 	return r.db.Delete(&model.Post{}, ID).Error
 }
+
+
+func (r *PostRepository) GetRecent(limit int) ([]model.Post, error) {
+	var posts []model.Post
+	err := r.db.
+		Preload("Comments").
+		Order("created_at DESC").
+		Limit(limit).
+		Find(&posts).Error
+
+	return posts, err
+}

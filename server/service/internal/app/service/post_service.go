@@ -38,3 +38,8 @@ func (s *PostService) UpdatePost(id uint, data model.Post) (*model.Post, error) 
 func (s *PostService) DeletePost(id uint) error {
 	return s.postRepo.Delete(id)
 }
+
+
+func (s * PostService) GenerateFeed()  ([]model.Post,error) {
+	return s.postRepo.GetRecent(10)
+}

@@ -1,5 +1,7 @@
 package model
 
+import "time"
+
 type Post struct {
 	ID       uint   `gorm:"primaryKey"`
 	Title    string `gorm:"type:varchar(255)"`
@@ -10,6 +12,9 @@ type Post struct {
 	UserID   uint `gorm:"not null"`
 	Topic 	 string `gorm:"type:varchar(50)"`
 	Comments []Comment `gorm:"foreignKey:PostID;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+
+	CreatedAt time.Time
+    UpdatedAt time.Time
 }
 
 

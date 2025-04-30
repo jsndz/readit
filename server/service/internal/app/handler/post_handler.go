@@ -166,3 +166,23 @@ func (h *PostHandler) DeletePost(c *fiber.Ctx) error {
 		"success": true,
 	})
 }
+
+
+func (h *PostHandler) GetFeed(c *fiber.Ctx) error {
+	posts, err := h.postService.GenerateFeed()
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"data":    nil,
+			"message": "Failed to fetch posts",
+			"success": false,
+			"err":     err.Error(),
+		})
+	}
+
+	return c.Status(fiber.StatusOK).JSON(fiber.Map{
+		"data":    posts,
+		"message": "Posts fetched successfully",
+		"success": true,
+		"err":     nil,
+	})
+}
