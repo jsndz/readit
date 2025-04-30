@@ -24,4 +24,6 @@ func CommentRoute(router fiber.Router,db *gorm.DB){
 	router.Get("/getAll",commentHandler.GetAllComments)
 	router.Put("/update/:id",commentHandler.UpdateComment)
 	router.Delete("/delete/:id",commentHandler.DeleteComment)
+
+	router.Post("/reply",commentHandler.Reply)
 }

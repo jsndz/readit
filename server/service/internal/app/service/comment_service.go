@@ -16,7 +16,7 @@ func NewCommentService (db *gorm.DB) *CommentService{
 	}
 }
 
-func (s *CommentService) CreateComment(data model.Comment) error {
+func (s *CommentService) CreateComment(data model.Comment) (*model.Comment,error) {
 	return s.commentRepo.Create(&data)
 }
 
@@ -34,4 +34,22 @@ func (s *CommentService) UpdateComment(id uint, data model.Comment) (*model.Comm
 
 func (s *CommentService) DeleteComment(id uint) error {
 	return s.commentRepo.Delete(id)
+}
+
+
+func (s *CommentService) Reply(data model.Comment) (*model.Comment, error ){
+	if data.ParentID !=nil {
+		if err:= s.commentRepo.Check(*data.ParentID); err!=nil {
+			return nil,err
+		}
+	}
+	var comment = &model.Comment{
+		ParentID: data.ParentID,
+		Content:  data.Content,
+		PostID:   data.PostID,
+		Username: data.Username,
+	}
+
+	
+	return s.commentRepo.Create(comment)
 }

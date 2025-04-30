@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useEffect, useState } from "react";
-import { comment, getPost } from "@/lib/endpoints";
+import { addComment, getPost } from "@/lib/endpoints";
 import { useAuthStore } from "@/lib/authStore";
 
 interface PageProps {
@@ -37,7 +37,7 @@ export default function PostPage({ params }: PageProps) {
 
     try {
       const user = getUser();
-      const response = await comment({
+      const response = await addComment({
         Content: commentText,
         Username: user?.Username,
         PostID: parseInt(id, 10),
@@ -88,7 +88,6 @@ export default function PostPage({ params }: PageProps) {
                 variant="ghost"
                 className="text-muted-foreground hover:text-destructive hover:bg-destructive/10"
               >
-                {/* Downvote SVG */}
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
@@ -170,8 +169,13 @@ export default function PostPage({ params }: PageProps) {
           </div>
 
           <div className="space-y-4">
-            {comments.map((comment) => (
-              <Comment key={comment.ID} comment={comment} />
+            {comments.map((comment, index) => (
+              <Comment
+                postID={parseInt(id, 10)}
+                key={`${comment.ID}-${index}`}
+                comment={comment}
+                commentID={comment.ID}
+              />
             ))}
           </div>
         </div>

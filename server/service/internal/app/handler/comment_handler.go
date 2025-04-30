@@ -32,7 +32,7 @@ log.Infof("hello %v",req)
 			"err":     err.Error(),
 		})
 	}
-	err := h.commentService.CreateComment(req)
+	comment,err := h.commentService.CreateComment(req)
 	if err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 			"data":    nil,
@@ -42,12 +42,42 @@ log.Infof("hello %v",req)
 		})
 	}
 	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
-		"data":    nil,
+		"data":    comment,
 		"message": "Successfully created a new user",
 		"success": true,
 		"err":     nil,
 	})
 }
+
+func (h *CommentHandler) Reply (c *fiber.Ctx) error{
+	var req model.Comment
+log.Infof("hello %v",req)
+
+	if err:= c.BodyParser(&req);err!=nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"data":    nil,
+			"message": "Invalid request body",
+			"success": false,
+			"err":     err.Error(),
+		})
+	}
+	comment,err := h.commentService.Reply(req)
+	if err != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"data":    nil,
+			"message": "Couldn't create Reply",
+			"success": false,
+			"err":     err.Error(),
+		})
+	}
+	return c.Status(fiber.StatusAccepted).JSON(fiber.Map{
+		"data":    comment,
+		"message": "Successfully created a Reply",
+		"success": true,
+		"err":     nil,
+	})
+}
+
 
 
 func (h *CommentHandler) GetCommentByID(c *fiber.Ctx) error {

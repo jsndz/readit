@@ -1,11 +1,12 @@
 "use client";
+import { addComment, reply } from "@/lib/endpoints";
 
 import { useState } from "react";
-import { formatDistanceToNow } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
+import { useAuthStore } from "@/lib/authStore";
 
 export type CommentType = {
   ID: number;
@@ -13,17 +14,27 @@ export type CommentType = {
   UserID: number;
   AuthorName: string;
   CreatedAt: string;
+  PostID: number;
   Children: CommentType[];
 };
 
 interface CommentProps {
   comment: CommentType;
   level?: number;
+  commentID: number;
+  postID: number;
 }
 
-export function Comment({ comment, level = 0 }: CommentProps) {
+export function Comment({
+  comment,
+  level = 0,
+  commentID,
+  postID,
+}: CommentProps) {
   const [isReplying, setIsReplying] = useState(false);
   const [replyContent, setReplyContent] = useState("");
+  const { getUser } = useAuthStore();
+  const user = getUser();
 
   const handleReplyToggle = () => {
     setIsReplying(!isReplying);
@@ -31,10 +42,12 @@ export function Comment({ comment, level = 0 }: CommentProps) {
 
   const handleReplySubmit = async () => {
     if (!replyContent.trim()) return;
-
-    // Handle submit reply to backend here
-    // Example: await postReply(comment.ID, replyContent)
-
+    const res = await reply({
+      Content: replyContent,
+      Username: user?.Username,
+      PostID: postID,
+      ParentID: commentID,
+    });
     setReplyContent("");
     setIsReplying(false);
   };
@@ -96,7 +109,13 @@ export function Comment({ comment, level = 0 }: CommentProps) {
       {comment.Children && comment.Children.length > 0 && (
         <div className="space-y-4 mt-2">
           {comment.Children.map((child) => (
-            <Comment key={child.ID} comment={child} level={currentLevel + 1} />
+            <Comment
+              key={child.ID}
+              comment={child}
+              level={currentLevel + 1}
+              commentID={child.ID}
+              postID={child.PostID}
+            />
           ))}
         </div>
       )}

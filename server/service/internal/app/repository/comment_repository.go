@@ -14,8 +14,9 @@ func NewCommentRepository(db *gorm.DB) *CommentRepository {
 	return &CommentRepository{db: db}
 }
 
-func (r *CommentRepository) Create(comment *model.Comment) error {
-	return r.db.Create(comment).Error
+func (r *CommentRepository) Create(comment *model.Comment) (*model.Comment,error) {
+	err:=r.db.Create(comment).Error
+	return comment,err
 }
 
 func (r *CommentRepository) Read(ID uint) (*model.Comment, error) {
@@ -25,6 +26,15 @@ func (r *CommentRepository) Read(ID uint) (*model.Comment, error) {
         return nil, err 
     }
     return &comment, nil
+}
+
+func (r *CommentRepository) Check(ID uint) ( error) {
+    var comment model.Comment
+	err := r.db.First(&comment, "ID = ?", ID).Error
+    if err != nil {
+        return err 
+    }
+    return  nil
 }
 
 func (r *CommentRepository) ReadAll() ([]model.Comment, error) {
