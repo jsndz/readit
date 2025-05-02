@@ -42,7 +42,7 @@ func main() {
 	app.Get("/", func(c *fiber.Ctx) error {
 		return c.SendString("Hello, World!")
 	})
-	port := getEnv("PORT","3000")
+	port := getEnv("PORT","3002")
 	fmt.Println("Connected:", dbConn)
 	fmt.Println("Server running on port:", port)
 	if err := app.Listen(":" + port); err != nil {

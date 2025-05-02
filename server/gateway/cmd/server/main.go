@@ -14,7 +14,7 @@ import (
 func main() {
 	app := fiber.New()
 	app.Use(cors.New(cors.Config{
-		AllowOrigins: "http://localhost:3002",
+		AllowOrigins: "http://localhost:3000",
 		AllowHeaders: "Origin, Content-Type, Accept, Authorization",
 		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
 		AllowCredentials: true,
@@ -35,7 +35,7 @@ func main() {
 		return proxy.ForwardOnly(c, "http://localhost:3001")
 	})
 	app.Get("/api/post/get/:id",middleware.Authenticate,func( c *fiber.Ctx)error{
-		response, err := proxy.ForwardReturn(c, "http://localhost:3000")
+		response, err := proxy.ForwardReturn(c, "http://localhost:3002")
 		if err != nil {
 			return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
 				"error": "failed to fetch post data",
@@ -70,10 +70,10 @@ func main() {
 		}) 
 	})
 	app.All("/api/post/*", middleware.Authenticate, func(c *fiber.Ctx) error {
-		return proxy.Forward(c, "http://localhost:3000")
+		return proxy.Forward(c, "http://localhost:3002")
 	})
 	app.All("/api/comment/*", middleware.Authenticate, func(c *fiber.Ctx) error {
-		return proxy.Forward(c, "http://localhost:3000")
+		return proxy.Forward(c, "http://localhost:3002")
 	})
 	
 	app.Listen(":8080")

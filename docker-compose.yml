@@ -1,0 +1,92 @@
+version: "3.8"
+
+services:
+  auth:
+    build: ./server/auth
+    container_name: auth-service
+    ports:
+      - "3001:3001"
+    depends_on:
+      - auth-db
+    environment:
+      - DB_HOST=auth-db
+      - DB_PORT=5433
+      - DB_USER=postgres
+      - DB_PASSWORD=readit
+      - DB_NAME=readit.auth
+      - DB_TIMEZONE=Asia/Kolkata
+    restart: unless-stopped
+
+  auth-db:
+    image: postgres:15
+    container_name: auth-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: readit
+      POSTGRES_DB: readit.auth
+    volumes:
+      - auth_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  gateway:
+    build: ./server/gateway
+    container_name: gateway-service
+    ports:
+      - "8080:8080"
+    depends_on:
+      - auth
+      - service
+    restart: unless-stopped
+
+  service:
+    build: ./server/service
+    container_name: core-service
+    ports:
+      - "3002:3002"
+    depends_on:
+      - service-db
+      - redis
+    environment:
+      - DB_HOST=service-db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=readit
+      - DB_NAME=postgres
+      - DB_TIMEZONE=Asia/Kolkata
+      - REDIS_ADDR=redis:6379
+    restart: unless-stopped
+
+  service-db:
+    image: postgres:15
+    container_name: service-db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: readit
+      POSTGRES_DB: postgres
+    volumes:
+      - service_pgdata:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  redis:
+    image: redis:7
+    container_name: redis
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  client:
+    build: ./client
+    container_name: frontend-client
+    ports:
+      - "3000:3000"
+    depends_on:
+      - gateway
+    restart: unless-stopped
+
+volumes:
+  auth_pgdata:
+  service_pgdata:
