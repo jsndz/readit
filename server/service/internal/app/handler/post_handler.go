@@ -6,6 +6,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/readit/internal/app/model"
 	"github.com/readit/internal/app/service"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/gorm"
 )
 
@@ -13,9 +14,9 @@ type PostHandler struct{
 	postService *service.PostService
 }
 
-func NewPostHandler(db *gorm.DB) * PostHandler {
+func NewPostHandler(db *gorm.DB,rdb *redis.Client) * PostHandler {
 	return &PostHandler{
-		postService: service.NewPostService(db),
+		postService: service.NewPostService(db,rdb),
 	}
 }
 

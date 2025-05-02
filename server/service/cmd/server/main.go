@@ -7,6 +7,7 @@ import (
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
 	"github.com/readit/pkg/db"
+	"github.com/readit/pkg/redis"
 	route "github.com/readit/routes"
 )
 
@@ -29,10 +30,10 @@ func main() {
 		AllowMethods: "GET,POST,PUT,DELETE,OPTIONS",
 	}))
 	dbConn,err := db.InitDB()
-
+	rdb:=redis.RedisConnect();
 	db.MigrateDB(dbConn)
 	postGroup := app.Group("/api/post")
-	route.PostRoute(postGroup, dbConn)
+	route.PostRoute(postGroup, dbConn,rdb)
 	CommentRoute := app.Group("/api/comment")
 	route.CommentRoute(CommentRoute, dbConn)
 	if err!=nil {
