@@ -139,3 +139,17 @@ export const getPost = async (id: string) => {
     throw error;
   }
 };
+
+export const Feed = async () => {
+  try {
+    const res = await axios.get(`${url}/api/post/feed`, {
+      withCredentials: true,
+    });
+    console.log(res.data);
+
+    return res.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};

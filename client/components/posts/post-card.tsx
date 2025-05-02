@@ -27,7 +27,7 @@ import { cn } from "@/lib/utils";
 import { CommentType } from "./comment";
 
 export type Post = {
-  ID: string;
+  ID: number;
   Title: string;
   Content: string;
   AuthorName: string;
