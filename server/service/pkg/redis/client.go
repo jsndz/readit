@@ -3,12 +3,14 @@ package redis
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/redis/go-redis/v9"
 )
 func RedisConnect() *redis.Client {
+	redisAddr := os.Getenv("REDIS_ADDR")
 	client := redis.NewClient(&redis.Options{
-        Addr:	  "localhost:6379",
+        Addr:	  redisAddr,
         Password: "",
         DB:		  0,  
     })
@@ -23,6 +25,7 @@ func RedisConnect() *redis.Client {
 	if err != nil {
 		panic(err)
 	}
+
 	fmt.Println("foo", val)
 	return client
 }
